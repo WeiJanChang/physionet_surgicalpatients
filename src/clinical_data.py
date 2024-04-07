@@ -39,6 +39,7 @@ import collections
 import pandas as pd
 from typing import TypedDict, Any, NamedTuple, Optional, List, Union, Tuple
 from pathlib import Path
+from data_normal_range import DATA_NORMAL_RANGE
 
 PathLike = Union[Path, str]
 
@@ -121,34 +122,12 @@ class AnesDict(TypedDict):
 
 
 def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
-    normal_ranges = {
-        "preop_ecg": 'Normal Sinus Rhythm',  # type:str
-        "preop_pft": 'Normal',  # type: str
-        "preop_hb": (13, 17),  # type: int  # g/dL
-        "preop_plt": (130, 400),  # type: int  # x1000/mcL
-        "preop_pt": (80, 120),  # type: int  # %
-        "preop_aptt": (26.7, 36.6),  # type: int  # sec
-        "preop_na": (135, 145),  # type: int  # mmol/L
-        "preop_k": (3.5, 5.5),  # type: int  # mmol/L
-        "preop_gluc": (70, 110),  # type: int  # mg/dL
-        "preop_alb": (3.3, 5.2),  # type: int  # g/dL
-        "preop_ast": (1, 40),  # type: int  # IU/L
-        "preop_alt": (1, 40),  # type: int  # IU/L
-        "preop_bun": (10, 26),  # type: int  # mg/dL
-        "preop_cr": (0.70, 1.40),  # type: int  # mg/dL
-        "preop_ph": (7.35, 7.45),  # type: int
-        "preop_hco3": (18, 23),  # type: int  # mmol/L
-        "preop_be": (-2.0, 3.0),  # type: int  # mmol/L
-        "preop_pao2": (83, 108),  # type: int  # mmHg
-        "preop_paco2": (35, 48),  # type: int  # mmHg
-        "preop_sao2": (95, 98),  # type: int  # %
-    }
 
     abnormal_data_list = []
 
     for index, row in df.iterrows():
         abnormal_row = False
-        for k, v in normal_ranges.items():
+        for k, v in DATA_NORMAL_RANGE.items():
             data = row[k]
             if isinstance(v, tuple) and not (v[0] <= data <= v[1]):
                 abnormal_row = True
@@ -167,5 +146,3 @@ if __name__ == '__main__':
     anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
     output_path = 'test.csv'
     abnormal_df = abnormal_data(anes_df, output_path)
-    print(anes_df.shape)
-    print(abnormal_df.shape)
