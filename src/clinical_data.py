@@ -37,7 +37,7 @@ VI. Model Deployment and Monitoring:
 import collections
 
 import pandas as pd
-from typing import TypedDict, Any, NamedTuple, Optional, List, Union, Tuple
+from typing import TypedDict, Any, NamedTuple, Optional, List, Union, Tuple, Dict
 from pathlib import Path
 from data_normal_range import DATA_NORMAL_RANGE
 
@@ -122,17 +122,29 @@ class AnesDict(TypedDict):
 
 
 def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
-
-    abnormal_data_list = []
-
+    abnormal_data_list: List[Dict[str, any]] = []
     for index, row in df.iterrows():
         abnormal_row = False
+        abnormal_value = {}
         for k, v in DATA_NORMAL_RANGE.items():
             data = row[k]
-            if isinstance(v, tuple) and not (v[0] <= data <= v[1]):
-                abnormal_row = True
+            if not pd.isnull(data):
+                if isinstance(v, tuple) and not (v[0] <= data <= v[1]):
+                    abnormal_row = True
+                    abnormal_value[k] = data
+
         if abnormal_row:
-            abnormal_data_list.append(row)
+            abnormal_data_list.append({"patient_id": row['subjectid'],
+                                       "age": row["age"],
+                                       "gender": row["sex"],
+                                       "height": row['height'],
+                                       "weight": row['weight'],
+                                       "diagnosis": row['dx'],
+                                       "opname": row['opname'],
+                                       "procedure": row['approach'],
+                                       "anes": row['ane_type'],
+                                       "ASA": row["asa"],
+                                       "abnormal_data": abnormal_value})
 
     abnormal_df = pd.DataFrame(abnormal_data_list)
 
@@ -144,5 +156,5 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
 
 if __name__ == '__main__':
     anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
-    output_path = 'test.csv'
+    output_path = 'pt_abnormal_data.csv'
     abnormal_df = abnormal_data(anes_df, output_path)
