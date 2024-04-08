@@ -1,4 +1,5 @@
-__all__ = {'DATA_NORMAL_RANGE'}
+__all__ = {'DATA_NORMAL_RANGE'}, ["extract_values"]
+
 DATA_NORMAL_RANGE = {
     "preop_ecg": 'Normal Sinus Rhythm',  # type:str
     "preop_pft": 'Normal',  # type: str
@@ -22,3 +23,28 @@ DATA_NORMAL_RANGE = {
     "preop_sao2": (95, 98),  # type: int  # %
 }
 
+
+def extract_values(dictionary):
+    preop_ecg = dictionary.get('preop_ecg')
+    preop_pft = dictionary.get('preop_pft')
+    preop_hb = dictionary.get('preop_hb')
+    preop_plt = dictionary.get("preop_plt")
+    preop_pt = dictionary.get("preop_pt")
+    preop_aptt = dictionary.get("preop_aptt")
+    preop_na = dictionary.get("preop_na")
+    preop_k = dictionary.get("preop_k")
+    preop_gluc = dictionary.get("preop_gluc")
+    preop_alb = dictionary.get('preop_alb')
+    preop_ast = dictionary.get('preop_ast')
+    preop_alt = dictionary.get('preop_alt')
+    preop_bun = dictionary.get('preop_bun')
+    preop_cr = dictionary.get('preop_cr')
+    preop_ph = dictionary.get('preop_ph')
+    preop_hco3 = dictionary.get('preop_hco3')
+    preop_be = dictionary.get('preop_be')
+    preop_pao2 = dictionary.get('preop_pao2')
+    preop_paco2 = dictionary.get('preop_paco2')
+    preop_sao2 = dictionary.get('preop_sao2')
+    return (preop_ecg, preop_pft, preop_hb, preop_plt, preop_pt, preop_aptt, preop_na,
+            preop_k, preop_gluc, preop_alb, preop_ast, preop_alt, preop_bun, preop_cr,
+            preop_ph, preop_hco3, preop_be, preop_pao2, preop_paco2, preop_sao2)
