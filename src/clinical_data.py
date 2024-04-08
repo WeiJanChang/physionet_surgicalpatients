@@ -165,28 +165,32 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
     return abnormal_df
 
 
-# todo: 寫一個fun 指定的病人/ 拿一群病人 拿病人的某個異常值
+# todo: how to 拿一群病人的某個異常值
 
 def select_pt(abnormal_df: pd.DataFrame,
-              patient_id: int) -> pd.DataFrame:
+              patient_id: int = None,
+              abnormal_item: Optional[List[str]] = None, ) -> pd.DataFrame:
     if patient_id is not None:
         patient_id_list = abnormal_df['patient_id'].tolist()
         if patient_id in patient_id_list:
             patient_id = abnormal_df['patient_id'] == patient_id
             selected_pt = abnormal_df[patient_id]
+            if abnormal_item is not None:
+                items = {key: value for key, value in DATA_NORMAL_RANGE.items()}.keys()
+                items_list = list(items)
+                if abnormal_item in items_list:
+                    selected_pt = selected_pt.dropna(axis=1)
+                    selected_pt = selected_pt[abnormal_item]
+                else:
+                    selected_pt = selected_pt.dropna(axis=1)
+                    abnormal_items = list(selected_pt.columns[11:])
+                    raise ValueError(
+                        f'abnormal items {abnormal_item} not in this patient data, please check{abnormal_items}')
         else:
             raise ValueError(f'Patient ID {patient_id} not in the patient list, please recheck patient IDs')
     else:
         raise ValueError("Patient ID cannot be None")
 
-    # if abnormal_item is not None:
-    #     items = {key: value for key, value in DATA_NORMAL_RANGE.items()}.keys()
-    #     items_list = list(items)
-    #     if abnormal_item in items_list:
-    #         selected_pt = selected_pt['abnormal_data']
-    # else:
-    #     raise ValueError(f'abnormal items {abnormal_item} not in the abnormal data list, please recheck')
-    # # selected_pt['abnormal_data'].apply(lambda x: x['preop_hb']))
     return selected_pt
 
 
@@ -219,5 +223,5 @@ if __name__ == '__main__':
     # htn_path = 'htn_patients.csv'
     # dm_path = 'dm_patients.csv'
     # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
-    select_df = select_pt(abnormal_df, 955)
-
+    select_df = select_pt(abnormal_df, 5955,"preop_k")
+    print(select_df)
