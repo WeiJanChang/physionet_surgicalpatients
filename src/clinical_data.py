@@ -2,7 +2,7 @@
 pipeline
 
 I. Data Collection and Preprocessing:
-    - Gather clinical data from physionet, including patient demographics, medical history, procedure details, and physiological data.
+    - Gather clinical data from physionet, including patient demographics, medical history, anes/op time, approach, and physiological data.
     - Preprocess the data by handling missing values, encoding categorical variables, and scaling numerical features as necessary.
 
 II. Predictive Modeling:
@@ -43,6 +43,8 @@ from data_normal_range import DATA_NORMAL_RANGE
 
 PathLike = Union[Path, str]
 
+
+# todo: 寫一個fun 指定的病人/ 拿一群病人 拿病人的某個異常值
 
 class AnesDict(TypedDict):
     caseid: str
@@ -122,6 +124,12 @@ class AnesDict(TypedDict):
 
 
 def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
+    """
+    To find out abnormal data from file of clinical data with crucial info, and save to another df.
+    :param df:  clinical_data df
+    :param output_path: path
+    :return: abnormal_data df
+    """
     abnormal_data_list: List[Dict[str, any]] = []
     for index, row in df.iterrows():
         abnormal_row = False
@@ -154,7 +162,33 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
     return abnormal_df
 
 
+def medical_history(df: pd.DataFrame, htn_path: PathLike, dm_path: PathLike) -> pd.DataFrame:
+    """
+    To find out who has pre-op DM or HTN
+    :param df: clinical_data df
+    :param htn_path: path
+    :param dm_path: path
+    :return: htn and dm_patients df
+    """
+    df = df.copy()
+    htn_mask: pd.Series[bool] = df['preop_htn'] == 1
+    dm_mask: pd.Series[bool] = df['preop_dm'] == 1
+    htn_pt: pd.DataFrame = df[htn_mask]
+    dm_pt: pd.DataFrame = df[dm_mask]
+
+    if htn_path is not None:
+        htn_pt.to_csv(htn_path, index=False)
+    if dm_path is not None:
+        dm_pt.to_csv(dm_path, index=False)
+
+    return htn_pt, dm_pt
+
+
 if __name__ == '__main__':
     anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
-    output_path = 'pt_abnormal_data.csv'
-    abnormal_df = abnormal_data(anes_df, output_path)
+    # output_path = 'pt_abnormal_data.csv'
+    # abnormal_df = abnormal_data(anes_df, output_path)
+    htn_path = 'htn_patients.csv'
+    dm_path = 'dm_patients.csv'
+    medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
+
