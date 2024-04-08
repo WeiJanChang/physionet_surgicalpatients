@@ -44,8 +44,6 @@ from data_normal_range import DATA_NORMAL_RANGE
 PathLike = Union[Path, str]
 
 
-# todo: 寫一個fun 指定的病人/ 拿一群病人 拿病人的某個異常值
-
 class AnesDict(TypedDict):
     caseid: str
     subjectid: str  # de-identified hospital ID of patient
@@ -162,6 +160,23 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
     return abnormal_df
 
 
+# todo: 寫一個fun 指定的病人/ 拿一群病人 拿病人的某個異常值
+
+def select_pt(abnormal_df: pd.DataFrame,
+              patient_id: int) -> pd.DataFrame:
+    if patient_id is not None:
+        patient_id_list = abnormal_df['patient_id'].tolist()
+        if patient_id in patient_id_list:
+            patient_id = abnormal_df['patient_id'] == patient_id
+            selected_pt = abnormal_df[patient_id]
+        else:
+            raise ValueError(f'Patient ID {patient_id} not in the patient list, please recheck patient IDs')
+    else:
+        raise ValueError("Patient ID cannot be None")
+
+    return selected_pt
+
+
 def medical_history(df: pd.DataFrame, htn_path: PathLike, dm_path: PathLike) -> pd.DataFrame:
     """
     To find out who has pre-op DM or HTN
@@ -186,9 +201,11 @@ def medical_history(df: pd.DataFrame, htn_path: PathLike, dm_path: PathLike) -> 
 
 if __name__ == '__main__':
     anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
-    # output_path = 'pt_abnormal_data.csv'
-    # abnormal_df = abnormal_data(anes_df, output_path)
-    htn_path = 'htn_patients.csv'
-    dm_path = 'dm_patients.csv'
-    medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
+    output_path = 'pt_abnormal_data.csv'
+    abnormal_df = abnormal_data(anes_df, output_path)
+    # htn_path = 'htn_patients.csv'
+    # dm_path = 'dm_patients.csv'
+    # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
+
+    print(select_pt(abnormal_df, 5))
 
