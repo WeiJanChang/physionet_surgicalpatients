@@ -39,7 +39,7 @@ import collections
 import pandas as pd
 from typing import TypedDict, Any, NamedTuple, Optional, List, Union, Tuple, Dict
 from pathlib import Path
-from data_normal_range import DATA_NORMAL_RANGE
+from data_normal_range import DATA_NORMAL_RANGE, extract_values
 
 PathLike = Union[Path, str]
 
@@ -135,7 +135,8 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
         for k, v in DATA_NORMAL_RANGE.items():
             data = row[k]
             if not pd.isnull(data):
-                if isinstance(v, tuple) and not (v[0] <= data <= v[1]):
+                if (isinstance(v, tuple) and not (v[0] <= data <= v[1])
+                        and data not in ['Normal Sinus Rhythm', 'Normal']):
                     abnormal_row = True
                     abnormal_value[k] = data
 
@@ -153,6 +154,10 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
                                        "abnormal_data": abnormal_value})
 
     abnormal_df = pd.DataFrame(abnormal_data_list)
+    abnormal_df[['preop_ecg', 'preop_pft', 'preop_hb', 'preop_plt', 'preop_pt', 'preop_aptt', 'preop_na', 'preop_k',
+                 'preop_gluc', 'preop_alb', 'preop_ast', 'preop_alt', 'preop_bun', 'preop_cr', 'preop_ph', 'preop_hco3',
+                 'preop_be', 'preop_pao2', 'preop_paco2', 'preop_sao2']] = abnormal_df['abnormal_data'].apply(
+        lambda x: pd.Series(extract_values(x)))
 
     if output_path is not None:
         abnormal_df.to_csv(output_path, index=False)
@@ -174,6 +179,14 @@ def select_pt(abnormal_df: pd.DataFrame,
     else:
         raise ValueError("Patient ID cannot be None")
 
+    # if abnormal_item is not None:
+    #     items = {key: value for key, value in DATA_NORMAL_RANGE.items()}.keys()
+    #     items_list = list(items)
+    #     if abnormal_item in items_list:
+    #         selected_pt = selected_pt['abnormal_data']
+    # else:
+    #     raise ValueError(f'abnormal items {abnormal_item} not in the abnormal data list, please recheck')
+    # # selected_pt['abnormal_data'].apply(lambda x: x['preop_hb']))
     return selected_pt
 
 
@@ -206,6 +219,5 @@ if __name__ == '__main__':
     # htn_path = 'htn_patients.csv'
     # dm_path = 'dm_patients.csv'
     # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
-
-    print(select_pt(abnormal_df, 5))
+    select_df = select_pt(abnormal_df, 955)
 
