@@ -121,7 +121,7 @@ class AnesDict(TypedDict):
     intraop_ca: int  # Calcium chloride, mg
 
 
-def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
+def abnormal_data(df: pd.DataFrame, output_path: PathLike = None, ) -> pd.DataFrame:
     """
     To find out abnormal data from file of clinical data with crucial info, and save to another df.
     :param df:  clinical_data df
@@ -165,7 +165,30 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
     return abnormal_df
 
 
-# todo: how to 拿一群病人的某個異常值
+def select_data(abnormal_df: pd.DataFrame,
+                abnormal_item: Optional[List[str]] = None,
+                output_path: PathLike = None, ) -> pd.DataFrame:
+    """
+    enter item to find all patients with the specific data and save to another df
+    :param abnormal_df:
+    :param abnormal_item:
+    :return: group_df
+    """
+    if abnormal_item is not None:
+        items = {key: value for key, value in DATA_NORMAL_RANGE.items()}.keys()
+        items_list = list(items)
+        if abnormal_item in items_list:
+            selected_data = abnormal_df.groupby(abnormal_item).apply(lambda x: x)
+            group_df = selected_data.dropna(axis=1)
+        else:
+            raise ValueError(
+                f'abnormal items {abnormal_item} not in this patient data, please check{items_list}')
+
+    if output_path is not None:
+        group_df.to_csv(output_path, index=False)
+
+    return group_df
+
 
 def select_pt(abnormal_df: pd.DataFrame,
               patient_id: int = None,
@@ -226,10 +249,11 @@ def medical_history(df: pd.DataFrame, htn_path: PathLike, dm_path: PathLike) -> 
 
 if __name__ == '__main__':
     anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
-    output_path = 'pt_abnormal_data.csv'
-    abnormal_df = abnormal_data(anes_df, output_path)
+    # output_path = 'pt_abnormal_data.csv'
+    abnormal_df = abnormal_data(anes_df)
     # htn_path = 'htn_patients.csv'
     # dm_path = 'dm_patients.csv'
     # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
     select_df = select_pt(abnormal_df, 5955, "preop_k")
-    print(select_df)
+    output_path = 'group.csv'
+    group_df = select_data(abnormal_df, "preop_na", output_path=output_path)
