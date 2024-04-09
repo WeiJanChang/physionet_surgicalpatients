@@ -272,15 +272,44 @@ def medical_history(df: pd.DataFrame, htn_path: PathLike, dm_path: PathLike) -> 
     return htn_pt, dm_pt
 
 
+def anes_op_time(df: pd.DataFrame,
+                 op_name: str = None,
+                 output_path: PathLike = None) -> pd.DataFrame:
+    """
+    calculate anesthesia time and operation time in each surgery selected
+    :param df: anes_df
+    :param opname: surgery name
+    :param output_path: path
+    :return: time_df
+    """
+
+    df['total anesthesia time (hrs)'] = df.apply(lambda x: (x['aneend'] - x['anestart']) / 60, axis=1)  # hours
+    df['total surgery time (hrs)'] = df.apply(lambda x: (x['opend'] - x['opstart']) / 60, axis=1)  # hours
+
+    if op_name is not None:
+        op_name_mask = df['opname'] == op_name
+        time_df = df[op_name_mask]
+
+    if output_path is not None:
+        time_df.to_csv(output_path, index=False)
+
+    return time_df
+
+
 if __name__ == '__main__':
     anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
+
+    # a = (anes_df['aneend'][0] - anes_df['anestart'][0]) / 60  # hours
+    # print(a)
     # output_path = 'pt_abnormal_data.csv'
-    abnormal_df = abnormal_data(anes_df)
+    # abnormal_df = abnormal_data(anes_df)
     # htn_path = 'htn_patients.csv'
     # dm_path = 'dm_patients.csv'
     # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
-    select_df = select_pt(abnormal_df, 5955, "preop_k")
+    # select_df = select_pt(abnormal_df, 5955, "preop_k")
     # output_path = 'group.csv'
-    group_df = select_data(abnormal_df, "preop_na")
-    output_path = 'asa.csv'
-    asa_df = select_asa(anes_df, 0, output_path=output_path)
+    # group_df = select_data(abnormal_df, "preop_na")
+    # output_path = 'asa.csv'
+    # asa_df = select_asa(anes_df, 0)
+    output_path = ('anes_op_time.csv')
+    time_df = anes_op_time(anes_df, op_name="Low anterior resection", output_path=output_path)
