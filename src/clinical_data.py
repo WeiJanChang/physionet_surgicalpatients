@@ -169,7 +169,15 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike) -> pd.DataFrame:
 
 def select_pt(abnormal_df: pd.DataFrame,
               patient_id: int = None,
-              abnormal_item: Optional[List[str]] = None, ) -> pd.DataFrame:
+              abnormal_item: Optional[List[str]] = None, ) -> int:
+    """
+    enter patient ID to see abnormal data or see specific abnormal data from abnormal_df
+
+    :param abnormal_df: patients with abnormal data
+    :param patient_id: unique patient id
+    :param abnormal_item: select specific item from a patient ID
+    :return: data of the item
+    """
     if patient_id is not None:
         patient_id_list = abnormal_df['patient_id'].tolist()
         if patient_id in patient_id_list:
@@ -223,5 +231,5 @@ if __name__ == '__main__':
     # htn_path = 'htn_patients.csv'
     # dm_path = 'dm_patients.csv'
     # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
-    select_df = select_pt(abnormal_df, 5955,"preop_k")
+    select_df = select_pt(abnormal_df, 5955, "preop_k")
     print(select_df)
