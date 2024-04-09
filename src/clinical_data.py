@@ -190,6 +190,31 @@ def select_data(abnormal_df: pd.DataFrame,
     return group_df
 
 
+def select_asa(df: pd.DataFrame,
+               asa: int = None,
+               output_path: PathLike = None) -> pd.DataFrame:
+    """
+    create a new df based of ASA level
+    :param df: anes_df or abnormal_df
+    :param asa: asa level
+    :param output_path: path
+    :return: asa_df
+    """
+    if asa is not None:
+        df['asa'] = df['asa'].fillna(0)  # there have NaN under ['asa']
+        asa_mask = df['asa'] == asa
+        asa_df = df[asa_mask]
+        asa_df['asa'] = asa_df['asa'].astype(int)
+
+        if asa == 0:
+            print('Please check the ASA level of your patient')
+
+    if output_path is not None:
+        asa_df.to_csv(output_path, index=False)
+
+    return asa_df
+
+
 def select_pt(abnormal_df: pd.DataFrame,
               patient_id: int = None,
               abnormal_item: Optional[List[str]] = None, ) -> int:
@@ -255,5 +280,7 @@ if __name__ == '__main__':
     # dm_path = 'dm_patients.csv'
     # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
     select_df = select_pt(abnormal_df, 5955, "preop_k")
-    output_path = 'group.csv'
-    group_df = select_data(abnormal_df, "preop_na", output_path=output_path)
+    # output_path = 'group.csv'
+    group_df = select_data(abnormal_df, "preop_na")
+    output_path = 'asa.csv'
+    asa_df = select_asa(anes_df, 0, output_path=output_path)
