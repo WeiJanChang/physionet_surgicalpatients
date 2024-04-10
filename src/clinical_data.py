@@ -23,7 +23,6 @@ IV. Decision Support Systems:
     - Integrate predictive models and time series analysis results into decision support systems.
     - Provide real-time feedback on patient status based on intraoperative data.
     - Suggest appropriate interventions or adjustments during surgery.
-    - Recommend optimal anesthesia dosages based on patient characteristics and procedure details.
 
 V. Visualization and Interpretability:
     - Develop interactive visualizations to provide insights into patient physiological responses during anesthesia.
@@ -272,8 +271,8 @@ def anes_op_time(df: pd.DataFrame,
                  op_name: str = None,
                  output_path: PathLike = None) -> pd.DataFrame:
     """
-    calculate anesthesia time and operation time in each surgery selected.
-    calculate average anes and op time in each surgery
+    calculate anesthesia time and operation time and save to a new file.
+    calculate average anes and op time in each surgery and save to a new file.
     :param df: anes_df
     :param op_name: surgery name
     :param output_path: path
@@ -300,9 +299,6 @@ def anes_op_time(df: pd.DataFrame,
 
 if __name__ == '__main__':
     anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
-
-    # a = (anes_df['aneend'][0] - anes_df['anestart'][0]) / 60  # hours
-    # print(a)
     # output_path = 'pt_abnormal_data.csv'
     # abnormal_df = abnormal_data(anes_df)
     # htn_path = 'htn_patients.csv'
