@@ -29,10 +29,6 @@ V. Visualization and Interpretability:
     - Develop interactive visualizations to provide insights into patient physiological responses during anesthesia.
     - Visualize trends over time, correlations between variables, and patient-specific dashboards for monitoring.
     - Ensure that the visualizations are interpretable and facilitate understanding of the data by healthcare professionals.
-
-VI. Model Deployment and Monitoring:
-    - Deploy the predictive models and decision support systems into production environments.
-    - Monitor the performance of the deployed models and systems, and update them as necessary based on feedback and new data.
 """
 import collections
 
@@ -276,15 +272,21 @@ def anes_op_time(df: pd.DataFrame,
                  op_name: str = None,
                  output_path: PathLike = None) -> pd.DataFrame:
     """
-    calculate anesthesia time and operation time in each surgery selected
+    calculate anesthesia time and operation time in each surgery selected.
+    calculate average anes and op time in each surgery
     :param df: anes_df
-    :param opname: surgery name
+    :param op_name: surgery name
     :param output_path: path
     :return: time_df
     """
-
     df['total anesthesia time (hrs)'] = df.apply(lambda x: (x['aneend'] - x['anestart']) / 60, axis=1)  # hours
     df['total surgery time (hrs)'] = df.apply(lambda x: (x['opend'] - x['opstart']) / 60, axis=1)  # hours
+    op_names = df['opname']
+    average_anes = (df.groupby(op_names).apply(lambda x: x['total anesthesia time (hrs)'].mean())).to_frame()
+    average_op = (df.groupby(op_names).apply(lambda x: x['total surgery time (hrs)'].mean())).to_frame()
+    average_time_df = average_anes.merge(average_op, on="opname")
+    average_time_df = average_time_df.rename(columns={'0_x': 'average_anes_time(hrs)', '0_y': 'average_op_time(hrs)'})
+    average_time_df.to_csv('average_surgery_time.csv')
 
     if op_name is not None:
         op_name_mask = df['opname'] == op_name
@@ -311,5 +313,5 @@ if __name__ == '__main__':
     # group_df = select_data(abnormal_df, "preop_na")
     # output_path = 'asa.csv'
     # asa_df = select_asa(anes_df, 0)
-    output_path = ('anes_op_time.csv')
-    time_df = anes_op_time(anes_df, op_name="Low anterior resection", output_path=output_path)
+    # output_path = ('anes_op_time.csv')
+    # time_df = anes_op_time(anes_df, op_name="Low anterior resection")
