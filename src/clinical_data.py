@@ -310,4 +310,4 @@ if __name__ == '__main__':
     # output_path = 'asa.csv'
     # asa_df = select_asa(anes_df, 0)
     # output_path = ('anes_op_time.csv')
-    # time_df = anes_op_time(anes_df, op_name="Low anterior resection")
+    # time_df = anes_op_time(anes_df)
