@@ -7,7 +7,7 @@ def chi2(df: pd.DataFrame,
          dependent_var: Optional[List[str]],
          independent_var: Optional[List[str]]):
     """
-
+    death_inhosp ~ sex/asa/opname/preop_htn/preop_dm/emop
     :param df: anes_df
     :param dependent_var: binary variable
     :param independent_var: categorical variable
@@ -15,6 +15,7 @@ def chi2(df: pd.DataFrame,
     """
     contingency_table = pd.crosstab(df[dependent_var], df[independent_var])
     chi2, p_value, dof, expected = chi2_contingency(contingency_table)
+    print(contingency_table)
     print("Chi-square statistic:", chi2)
     print("p-value:", p_value)
 
