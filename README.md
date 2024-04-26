@@ -4,3 +4,18 @@ This repository contains a dataset from this source:
 This dataset includes patient demographics, medical history, anes/op time, approach, and physiological data.
 
 You can now in here find how to preprocess the data by handling missing values, encoding categorical variables, and scaling numerical features as necessary.
+
+# Installation
+- Create environment for the required dependencies
+```
+conda create -n pyphysionet python~=3.9.16
+conda activate pyphysionet
+cd /path/to/your/directory
+pip install -r requirements.txt
+```
+- Buildup the src path
+```
+conda install conda-build
+conda develop src
+cd src
+```
