@@ -19,3 +19,11 @@ conda install conda-build
 conda develop src
 cd src
 ```
+
+# Data processing
+
+## Find abnormal data 
+```
+python clinical_data.py
+```
+
