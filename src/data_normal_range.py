@@ -1,4 +1,4 @@
-__all__ = {'DATA_NORMAL_RANGE'}, ["extract_values"]
+__all__ = ["DATA_NORMAL_RANGE", "extract_values"]
 
 DATA_NORMAL_RANGE = {
     "preop_ecg": 'Normal Sinus Rhythm',  # type:str
