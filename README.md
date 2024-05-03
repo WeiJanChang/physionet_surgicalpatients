@@ -8,7 +8,7 @@ You can now in here find how to preprocess the data by handling missing values, 
 # Installation
 - Create environment for the required dependencies
 ```
-conda create -n pyphysionet python~=3.9.16
+conda create -n pyphysionet python~=3.9.0
 conda activate pyphysionet
 cd /path/to/your/directory
 pip install -r requirements.txt
