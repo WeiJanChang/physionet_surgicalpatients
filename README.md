@@ -10,7 +10,7 @@ You can now in here find how to preprocess the data by handling missing values, 
 ```
 conda create -n pyphysionet python~=3.9.0
 conda activate pyphysionet
-cd /path/to/your/directory
+cd [CLONED_DIRECTORY]
 pip install -r requirements.txt
 ```
 - Buildup the src path
