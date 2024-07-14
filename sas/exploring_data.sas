@@ -29,7 +29,7 @@ title;
 
 title "Frequency Report in operation type";
 PROC FREQ data = surg.clinical_data order=freq;
-	tables optype / nocum plots=freqplot;
+	tables optype / nocum plots=freqplot (scale=percent);
 run;
 title;
 
