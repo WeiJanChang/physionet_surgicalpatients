@@ -48,15 +48,16 @@ ODS PDF CLOSE;
 /* To identify which departments have more patients with longer ICU stays, 
 in order to address potential safety issues and improve patient care */
 ODS PDF FILE= "&output_path/surgical_avg_icu.pdf" STYLE = Journal;
+%let inde_var = ane_type;
 title "Surgical Data Analysis";
-title2 "Average ICU Days department";
+title2 "Average ICU Days in &inde_var";
 
 proc sql;
     create table AvgICU as
-    select department, 
+    select &inde_var, 
            mean(icu_days) as Avg_ICU_Days
     from surg.clinical_data
-    group by department
+    group by &inde_var
     order by Avg_ICU_Days;
     select * from AvgICU;
 quit;
