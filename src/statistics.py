@@ -9,7 +9,9 @@ def chi2(df: pd.DataFrame,
          dependent_var: Optional[List[str]],
          independent_var: Optional[List[str]]):
     """
-    death_inhosp ~ sex/asa/opname/preop_htn/preop_dm/emop
+    to check if two categorical variables are related or independent.
+    
+    death_inhosp [0/1] ~ sex [M/F] /asa[0~6]/opname/preop_htn [0/1]/preop_dm [0/1]/emop [0/1]
     :param df: anes_df
     :param dependent_var: binary variable
     :param independent_var: categorical variable
@@ -56,4 +58,5 @@ if __name__ == '__main__':
     anes_df['total anesthesia time (hrs)'] = anes_df.apply(lambda x: (x['aneend'] - x['anestart']) / 60,
                                                            axis=1)  # hours
     anes_df['total surgery time (hrs)'] = anes_df.apply(lambda x: (x['opend'] - x['opstart']) / 60, axis=1)  # hours
-    linear_regression(anes_df, 'bmi', 'height')
+    # chi2(anes_df, 'death_inhosp', 'preop_htn')
+    # linear_regression(anes_df, 'bmi', 'height')
