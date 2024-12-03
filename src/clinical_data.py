@@ -29,8 +29,6 @@ V. Visualization and Interpretability:
     - Visualize trends over time, correlations between variables, and patient-specific dashboards for monitoring.
     - Ensure that the visualizations are interpretable and facilitate understanding of the data by healthcare professionals.
 """
-import collections
-
 import pandas as pd
 from typing import TypedDict, Optional, List, Union, Dict
 from pathlib import Path
@@ -117,9 +115,9 @@ class AnesDict(TypedDict):
     intraop_ca: int  # Calcium chloride, mg
 
 
-def abnormal_data(df: pd.DataFrame, output_path: PathLike = None, ) -> pd.DataFrame:
+def abnormal_data(df: pd.DataFrame, output_path: PathLike = None) -> pd.DataFrame:
     """
-    To find out abnormal data from file of clinical data with crucial info, and save to another df.
+    To find out abnormal data from clinical data with crucial info, and save to another df.
     :param df:  clinical_data df
     :param output_path: path
     :return: abnormal_data df
@@ -163,11 +161,11 @@ def abnormal_data(df: pd.DataFrame, output_path: PathLike = None, ) -> pd.DataFr
 
 def select_data(abnormal_df: pd.DataFrame,
                 abnormal_item: Optional[List[str]] = None,
-                output_path: PathLike = None, ) -> pd.DataFrame:
+                output_path: PathLike = None) -> pd.DataFrame:
     """
     enter item to find all patients with the specific data and save to another df
-    :param abnormal_df:
-    :param abnormal_item:
+    :param abnormal_df: using function of abnormal_data to get abnormal_df
+    :param abnormal_item: item of test
     :return: group_df
     """
     if abnormal_item is not None:
@@ -213,7 +211,7 @@ def select_asa(df: pd.DataFrame,
 
 def select_pt(abnormal_df: pd.DataFrame,
               patient_id: int = None,
-              abnormal_item: Optional[List[str]] = None, ) -> int:
+              abnormal_item: Optional[List[str]] = None) -> int:
     """
     enter patient ID to see abnormal data or see specific abnormal data from abnormal_df
 
@@ -246,26 +244,25 @@ def select_pt(abnormal_df: pd.DataFrame,
     return selected_pt
 
 
-def medical_history(df: pd.DataFrame, htn_path: PathLike, dm_path: PathLike) -> pd.DataFrame:
+def medical_history(df: pd.DataFrame, htn: bool = False, dm: bool = False) -> pd.DataFrame:
     """
     To find out who has pre-op DM or HTN
     :param df: clinical_data df
-    :param htn_path: path
-    :param dm_path: path
+    :param htn: patients with hypertension
+    :param dm: patients with diabetes
     :return: htn and dm_patients df
     """
     df = df.copy()
-    htn_mask: pd.Series[bool] = df['preop_htn'] == 1
-    dm_mask: pd.Series[bool] = df['preop_dm'] == 1
-    htn_pt: pd.DataFrame = df[htn_mask]
-    dm_pt: pd.DataFrame = df[dm_mask]
-
-    if htn_path is not None:
-        htn_pt.to_csv(htn_path, index=False)
-    if dm_path is not None:
-        dm_pt.to_csv(dm_path, index=False)
-
-    return htn_pt, dm_pt
+    if htn:
+        htn_mask: bool = df['preop_htn'] == 1
+        htn_pt: pd.DataFrame = df[htn_mask]
+        htn_pt.to_csv('htn.csv', index=False)
+        return htn_pt
+    if dm:
+        dm_mask: bool = df['preop_dm'] == 1
+        dm_pt: pd.DataFrame = df[dm_mask]
+        dm_pt.to_csv('dm.csv', index=False)
+        return dm_pt
 
 
 def anes_op_time(df: pd.DataFrame,
@@ -296,19 +293,3 @@ def anes_op_time(df: pd.DataFrame,
         time_df.to_csv(output_path, index=False)
 
     return time_df
-
-
-if __name__ == '__main__':
-    anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
-    # output_path = 'pt_abnormal_data.csv'
-    # abnormal_df = abnormal_data(anes_df)
-    # htn_path = 'htn_patients.csv'
-    # dm_path = 'dm_patients.csv'
-    # medical_history(anes_df, htn_path=htn_path, dm_path=dm_path)
-    # select_df = select_pt(abnormal_df, 5955, "preop_k")
-    # output_path = 'group.csv'
-    # group_df = select_data(abnormal_df, "preop_na")
-    # output_path = 'asa.csv'
-    # asa_df = select_asa(anes_df, 0)
-    # output_path = ('anes_op_time.csv')
-    # time_df = anes_op_time(anes_df)
