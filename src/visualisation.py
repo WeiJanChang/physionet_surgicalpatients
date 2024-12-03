@@ -1,7 +1,6 @@
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
-
+# todo create bar chart by age by gender by op by dx
 
 def bar_chart(df: pd.DataFrame, age_group: str = None, gender: str = None):
     """
