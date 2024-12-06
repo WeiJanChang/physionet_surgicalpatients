@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-# todo create bar chart by age by gender by op by dx
+
+
+# todo create dashboard by age by gender by op by dx
 
 def bar_chart(df: pd.DataFrame, age_group: str = None, gender: str = None):
     """
@@ -18,6 +20,8 @@ def bar_chart(df: pd.DataFrame, age_group: str = None, gender: str = None):
         df["age group"] = pd.cut(df.age, bins=bins, labels=labels, right=False)
         if gender is not None:
             gender_counts = df.groupby(['age group', 'sex'], observed=False).size().unstack(fill_value=0)
+            # observed: True, show observed values for categorical groupers; False, show all values for categorical groupers
+            # unstack(fill_value = ), value to use when replacing NaN values
             gender_counts.plot(kind='bar', stacked=False, color=['blue', 'red'], alpha=0.7)
 
         plt.title('Gender Distribution by Age Group')
@@ -28,3 +32,39 @@ def bar_chart(df: pd.DataFrame, age_group: str = None, gender: str = None):
         plt.legend(title='Gender')
 
     return plt.show()
+
+
+def bar_chart_by_gender(df: pd.DataFrame,
+                        filter_col: str,
+                        apply_filter: bool = True,
+                        filter_val: str | int = None):
+    """
+    Generates a bar chart showing gender distribution for a specific column.
+
+    :param df: dataframe
+    :param filter_col: column name to filter the data
+    :param apply_filter: whether to filter the df based on the 'filter_value'
+    :param filter_val:value to filter the filter_column
+    :return: bar chart
+    """
+    df = df.copy()
+    if apply_filter:
+        if filter_val is None:
+            raise ValueError("'filter_value' must be provided if 'apply_filter' is enabled.")
+        df = df[df[filter_col] == filter_val]
+
+    # grouping data and create bar chart
+
+    gender_counts = df.groupby(['sex']).size()
+
+    gender_counts.plot(kind='bar', color=['blue', 'red'], alpha=0.7)
+
+    plt.xlabel("Gender")
+    plt.ylabel("Count")
+    plt.title(f"Gender distribution of {filter_col} in {filter_val}")
+    plt.show()
+
+
+if __name__ == '__main__':
+    df = pd.read_csv('~/code/physionet_surgicalpatients/test_file/clinical_data.csv')
+    bar_chart_by_gender(df, filter_col='opname', filter_val='Low anterior resection')
