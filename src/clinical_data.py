@@ -70,6 +70,7 @@ def select_data(abnormal_df: pd.DataFrame,
     enter item to find all patients with the specific data and save to another df
     :param abnormal_df: using function of abnormal_data to get abnormal_df
     :param abnormal_item: item of test
+    :param output_path: output path
     :return: group_df
     """
     if abnormal_item is not None:
