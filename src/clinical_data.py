@@ -21,7 +21,7 @@ __all__ = ["abnormal_data", "select_data", "select_asa", "select_pt", "medical_h
 
 def abnormal_data(df: pd.DataFrame, output_path: PathLike = None) -> pd.DataFrame:
     """
-    To find out abnormal data from clinical data with crucial info, and save to another df.
+    To find out abnormal lab data of pre-op from patients and save to another df.
     :param df:  clinical_data df
     :param output_path: path
     :return: abnormal_data df
@@ -190,6 +190,7 @@ def anes_op_time(df: pd.DataFrame,
     average_time_df = average_time_df.rename(columns={'0_x': 'average_anes_time(hrs)', '0_y': 'average_op_time(hrs)'})
     average_time_df.to_csv('average_surgery_time.csv')
 
+    time_df = pd.DataFrame()
     if op_name is not None:
         op_name_mask = df['opname'] == op_name
         time_df = df[op_name_mask]
