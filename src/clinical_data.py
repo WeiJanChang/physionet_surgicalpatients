@@ -2,27 +2,8 @@
 pipeline
 
 I. Data Collection and Preprocessing:
-    - Gather clinical data from physionet, including patient demographics, medical history, anes/op time, approach, and physiological data.
+    - Gather clinical data from Physionet, including patient demographics, medical history, anes/op time, approach, and physiological data.
     - Preprocess the data by handling missing values, encoding categorical variables, and scaling numerical features as necessary.
-
-II. Predictive Modeling:
-    - Split the preprocessed data into training and testing sets.
-    - Train predictive models for each task:
-        - Predicting risk of complications during surgery.
-        - Predicting recovery times.
-        - Predicting likelihood of specific post-operative conditions.
-        - Predicting anesthesia dosage requirements.
-        - Evaluate the models using appropriate metrics and cross-validation techniques.
-
-III. Time Series Analysis:
-    - Perform time series analysis on the physiological data collected during anesthesia and surgery.
-    - Analyze trends, seasonal patterns, correlations, and variability in the time series data.
-    - Use techniques such as dynamic time warping, forecasting, change point detection, and correlation analysis.
-
-IV. Decision Support Systems:
-    - Integrate predictive models and time series analysis results into decision support systems.
-    - Provide real-time feedback on patient status based on intraoperative data.
-    - Suggest appropriate interventions or adjustments during surgery.
 
 V. Visualization and Interpretability:
     - Develop interactive visualizations to provide insights into patient physiological responses during anesthesia.
@@ -30,89 +11,12 @@ V. Visualization and Interpretability:
     - Ensure that the visualizations are interpretable and facilitate understanding of the data by healthcare professionals.
 """
 import pandas as pd
-from typing import TypedDict, Optional, List, Union, Dict
+from typing import Optional, List, Union, Dict
 from pathlib import Path
 from data_normal_range import DATA_NORMAL_RANGE, extract_values
 
 PathLike = Union[Path, str]
 __all__ = ["abnormal_data", "select_data", "select_asa", "select_pt", "medical_history", "anes_op_time"]
-
-
-class AnesDict(TypedDict):
-    caseid: str
-    subjectid: str  # de-identified hospital ID of patient
-    casestart: int  # sec
-    caseend: int  # sec
-    anestart: int  # sec, from casestart
-    aneend: int  # sec, from casestart
-    opstart: int  # sec, from casestart
-    opend: int  # sec, from casestart
-    adm: int  # sec, admission time from casestart
-    dis: int  # sec, discharge time from casestart
-    icu_days: int
-    death_inhosp: int  # in-hospital mortality
-    age: int
-    sex: str
-    height: int  # cm
-    weight: int  # kg
-    bmi: int  # kg/m2
-    asa: int  # ASA classification
-    emop: int  # binary, emergency operation
-    department: str  # surgical depart.
-    optype: str
-    dx: str
-    opname: str
-    approach: str
-    position: str
-    ane_type: str
-    preop_htn: int  # binary
-    preop_dm: int  # binary
-    preop_ecg: str
-    preop_pft: str  # pulmonary function
-    preop_hb: int  # g/dL
-    preop_plt: int  # x1000/mcL
-    preop_pt: int  # %
-    preop_aptt: int  # sec
-    preop_na: int  # mmol/L
-    preop_k: int  # mmol/L
-    preop_gluc: int  # mg/dL
-    preop_alb: int  # g/dL
-    preop_ast: int  # IU/L
-    preop_alt: int  # IU/L
-    preop_bun: int  # mg/dL
-    preop_cr: int  # mg/dL
-    preop_ph: int
-    preop_hco3: int  # mmol/L
-    preop_be: int  # mmol/L
-    preop_pao2: int  # mmHg
-    preop_paco2: int  # mmHg
-    preop_sao2: int  # %
-    cormack: str  # Cormack's grade
-    airway: str  # airway toute
-    tubesize: int
-    dltubesize: str  # double lumen tube size
-    lmasize: int  # LMA size
-    iv1: str
-    iv2: str
-    aline1: str
-    aline2: str
-    cline1: str
-    cline2: str
-    intraop_ebl: int  # estimated blood loss, ml
-    intraop_uo: int  # urine output, ml
-    intraop_rbc: int  # RBC transfusion, Unit
-    intraop_ffp: int
-    intraop_ctystalloid: int  # ml
-    intraop_colloid: int  # ml
-    intraop_ppf: int  # propofol bolus, mg
-    intraop_mdz: int  # midazolam, mg
-    intraop_ftn: int  # fentanyl, mcg
-    intraop_rocu: int  # Rocuronium, mg
-    intraop_vecu: int  # Vecuronium, mg
-    intraop_eph: int  # Ephedrine, mg
-    intraop_phe: int  # Phenylephrine, mcg
-    intraop_epi: int  # Epinephrine, mcg
-    intraop_ca: int  # Calcium chloride, mg
 
 
 def abnormal_data(df: pd.DataFrame, output_path: PathLike = None) -> pd.DataFrame:
