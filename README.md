@@ -28,7 +28,7 @@ conda develop src
 cd src
 ```
 
-# Data pre-processing
+# Pre-processing
 
 To find out patients with all abnormal_data, please use
 
