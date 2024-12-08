@@ -2,7 +2,7 @@ import pandas
 import pandas as pd
 import matplotlib.pyplot as plt
 
-__all__ = [""]
+__all__ = ["figure_by_gender"]
 
 
 # todo create dashboard by age by gender by op by dx
