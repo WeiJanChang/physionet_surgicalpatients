@@ -1,13 +1,17 @@
 # Dataset Overview
 
-This repository contains a dataset from this source:
+This repository contains a dataset from [PhysioNet](https://physionet.org/content/vitaldb/1.0.0/): VitalDB,
+a high-fidelity multi-parameter vital signs database in surgical patients.
 
-## [PhysioNet](https://physionet.org/content/vitaldb/1.0.0/): VitalDB, a high-fidelity multi-parameter vital signs database in surgical patients
+Data Features:
 
-This dataset includes patient demographics, medical history, anes/op time, approach, and physiological data.
+- Patient demographics
+- Medical history
+- Surgical information: anesthesia and operation time, surgical approach
+- Physiological data.
 
-You can now in here find how to preprocess the data by handling missing values, encoding categorical variables, and
-scaling numerical features as necessary.
+This repository provides tools for preprocessing and analyzing this data, focusing on handling missing values,
+encoding categorical variables, and scaling numerical features.
 
 # Installation
 
@@ -30,28 +34,44 @@ cd src
 
 # Pre-processing
 
-To find out patients with all abnormal_data, please use
+- Identify patients with abnormal_data
 
 `` from src.clinical_data import abnormal_data``
 
-To select all patents who match specific lab data with abnormality, please use
+- Filter patients by abnormal lab results
 
 `` from src.clinical_data import select_data``
 
-To find patients based on ASA level
+- Filter patients by ASA level
 
 `` from src.clinical_data import select_asa``
 
-To enter patient ID to see abnormal data or see specific abnormal data from df
+- View patient-specific abnormal data
 
 `` from src.clinical_data import select_pt``
 
-To find out patients with pre-op DM or HTN
+- Identify patients with pre-op diabetes (DM) or hypertension (HTN)
 
 `` from src.clinical_data import medical_history``
 
-To calculate average anes and op time in each surgery.
+- Calculate average anes and op time.
 
 `` from src.clinical_data import anes_op_time``
-  
 
+# Data visualisation
+
+```
+from visulisaion import figure_by_gender
+
+figure_by_gender(df, 
+                 bar_chart=False, # to create a bar chart if it is True
+                 pie_chart=True, # to create a pie chart if it is True
+                 filter_col='opname', # any column to filter on
+                 filter_val='Lung lobectomy') # any value to filter on 
+```
+
+![Example 1](figure/pie_chart.png)
+
+# Contact
+
+Wei Jan Chang, weijanchang@rcsi.ie
