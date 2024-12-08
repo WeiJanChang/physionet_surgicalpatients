@@ -13,6 +13,10 @@ Data Features:
 This repository provides tools for preprocessing and analyzing this data, focusing on handling missing values,
 encoding categorical variables, and scaling numerical features.
 
+# Python
+
+---
+
 # Installation
 
 - Create environment for the required dependencies
@@ -90,6 +94,24 @@ figure_by_gender(df,
 ```
 
 ![Example 1](figure/pie_chart.png)
+
+# SAS
+
+---
+
+# Installation
+
+Using [SAS OnDemand for Academics](http://welcome.oda.sas.com)
+
+# Usage
+
+- To create a library named surg ``libname_surg.sas``
+- To import CSV file into a SAS dataset ``csv_to_sas.sas``
+- To standardise variable name and mapping raw data to CDISC SDTM (Study Data Tabulation Model), including
+  Demographics, Adverse Events, and Laboratory Results
+  ``clinical_data.sas``
+- To create a macro variable for output ``ouput_path.sas``
+- To create Frequency Report, Plots ``exploring_data.sas``
 
 # Contact
 
