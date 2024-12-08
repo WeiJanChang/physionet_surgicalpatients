@@ -58,7 +58,26 @@ cd src
 
 `` from src.clinical_data import anes_op_time``
 
+# Statistical Analysis
+
+## Chi-square analysis
+
+Perform chi-square tests to check if two categorical variables are related or independent.
+
+example usage
+
+```
+from statistics import chi2
+
+chi2(df,
+     dependent_var='death_inhosp',
+     independent_var=['preop_htn', 'sex']
+     )
+```
+
 # Data visualisation
+
+example usage
 
 ```
 from visulisaion import figure_by_gender
