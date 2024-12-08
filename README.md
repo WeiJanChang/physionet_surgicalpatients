@@ -105,13 +105,12 @@ Using [SAS OnDemand for Academics](http://welcome.oda.sas.com)
 
 # Usage
 
-- To create a library named surg ``libname_surg.sas``
-- To import CSV file into a SAS dataset ``csv_to_sas.sas``
-- To standardise variable name and mapping raw data to CDISC SDTM (Study Data Tabulation Model), including
+-  ``libname_surg.sas``: To create a library named surg
+-  ``csv_to_sas.sas``: To import CSV file into a SAS dataset
+-  ``clinical_data.sas``: To standardise variable name and mapping raw data to CDISC SDTM (Study Data Tabulation Model), including
   Demographics, Adverse Events, and Laboratory Results
-  ``clinical_data.sas``
-- To create a macro variable for output ``ouput_path.sas``
-- To create Frequency Report, Plots ``exploring_data.sas``
+-  ``ouput_path.sas``: To create a macro variable for output 
+-  ``exploring_data.sas``: To create Frequency Report, Plots 
 
 # Contact
 
