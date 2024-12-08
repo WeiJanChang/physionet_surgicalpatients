@@ -66,7 +66,7 @@ def figure_by_gender(df: pd.DataFrame,
     if bar_chart:
         # Apply a function groupby to each row or column of a DataFrame.
         # size(): Compute group sizes
-        gender_counts.plot(kind='bar', color=['blue', 'red'], alpha=0.7, )
+        gender_counts.plot(kind='bar', color=['blue', 'red'], alpha=0.7)
     if pie_chart:
         gender_counts.plot(kind='pie', color=['blue', 'red'],
                            autopct=lambda pct: f'{int(pct / 100. * gender_counts.sum())} ({pct:.1f}%)',
