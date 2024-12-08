@@ -1,27 +1,52 @@
 import pandas as pd
 from scipy.stats import chi2_contingency
-from typing import TypedDict, Optional, List
+from typing import Dict, Optional, List, Any
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
+__all__ = ["chi2"]
+
 
 def chi2(df: pd.DataFrame,
-         dependent_var: Optional[List[str]],
-         independent_var: Optional[List[str]]):
+         dependent_var: str,
+         independent_var: Optional[List[str]]) -> Dict[str, Any]:
     """
-    to check if two categorical variables are related or independent.
+    Perform chi-square tests to check if two categorical variables are related or independent.
     
     death_inhosp [0/1] ~ sex [M/F] /asa[0~6]/opname/preop_htn [0/1]/preop_dm [0/1]/emop [0/1]
     :param df: anes_df
-    :param dependent_var: binary variable
-    :param independent_var: categorical variable
-    :return: results of chi square
+    :param dependent_var: The binary variable
+    :param independent_var: A list of categorical variables
+    :return: A dictionary with the chi-square results for each independent variable.
     """
-    contingency_table = pd.crosstab(df[dependent_var], df[independent_var])
-    chi2, p_value, dof, expected = chi2_contingency(contingency_table)
-    print(contingency_table)
-    print("Chi-square statistic:", chi2)
-    print("p-value:", p_value)
+
+    # Validate inputs
+    if dependent_var not in df.columns:
+        raise ValueError(f"Dependent variable '{dependent_var}' not found in DataFrame.")
+
+    for var in independent_var:
+        if var not in df.columns:
+            raise ValueError(f"Independent variable '{var}' not found in DataFrame.")
+    results = {}
+
+    # Perform chi-square test for each independent variable
+    for var in independent_var:
+        contingency_table = pd.crosstab(df[dependent_var], df[var])
+        chi2_statistic, p_value, dof, expected = chi2_contingency(contingency_table)
+
+        results[var] = {
+            "contingency_table": contingency_table,
+            "chi2_statistic": chi2_statistic,
+            "p_value": p_value,
+            "degrees_of_freedom": dof,
+            "expected_frequencies": expected
+
+        }
+        print(contingency_table)
+        print("Chi-square statistic:", chi2)
+        print("p-value:", p_value)
+
+    return results
 
 
 def linear_regression(df: pd.DataFrame,
@@ -51,12 +76,3 @@ def linear_regression(df: pd.DataFrame,
     plt.ylabel(dependent_var)
     plt.title(f'Linear Regression: {dependent_var} vs {independent_var}')
     plt.show()
-
-
-if __name__ == '__main__':
-    anes_df = pd.read_csv("/Users/wei/Documents/physionet_surgicalpatients/clinical_data.csv")
-    anes_df['total anesthesia time (hrs)'] = anes_df.apply(lambda x: (x['aneend'] - x['anestart']) / 60,
-                                                           axis=1)  # hours
-    anes_df['total surgery time (hrs)'] = anes_df.apply(lambda x: (x['opend'] - x['opstart']) / 60, axis=1)  # hours
-    # chi2(anes_df, 'death_inhosp', 'preop_htn')
-    # linear_regression(anes_df, 'bmi', 'height')
