@@ -94,7 +94,7 @@ figure_by_gender(df,
 ```
 
 ![Example 1](figure/pie_chart.png)
-
+![Example 2](figure/op_wordcloud.png)
 # SAS
 
 ---
